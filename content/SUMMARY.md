@@ -4,7 +4,7 @@
 
 [Licencia y derechos de autor](licencia.md)
 
-- [Introducción](relative/path/to/markdown2.md)
+- [Introducción](introduccion.md)
 
 ---
 
@@ -28,3 +28,5 @@
 ---
 
 # Parte 4: Apéndices
+
+- [Bibliografía]()
