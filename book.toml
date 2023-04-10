@@ -1,0 +1,9 @@
+[book]
+authors = ["Alberto G. Viu"]
+language = "es"
+multilingual = false
+src = "content"
+title = "Librecracia"
+
+[output.html]
+default-theme = "light"
