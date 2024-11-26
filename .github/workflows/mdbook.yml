@@ -1,0 +1,48 @@
+name: Build mdbook
+description: This has not been tested yet.
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Install Rust and Cargo
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+
+    - name: Install mdbook
+      run: cargo install mdbook
+
+    - name: Build the book
+      run: mdbook build
+
+    - name: Install wkhtmltopdf
+      run: sudo apt-get update && sudo apt-get install -y wkhtmltopdf
+
+    - name: Get release version
+      id: get_version
+      run: echo "::set-output name=release_version::${GITHUB_REF#refs/tags/}"
+
+    - name: Convert to PDF
+      run: wkhtmltopdf book/index.html "librecracia-v${{ steps.get_version.outputs.release_version }}.pdf"
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: book
+        path: "librecracia-v${{ steps.get_version.outputs.release_version }}.pdf"
+    - name: Upload PDF as release asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }}
+        asset_path: "librecracia-v${{ steps.get_version.outputs.release_version }}.pdf"
+        asset_name: "librecracia-v${{ steps.get_version.outputs.release_version }}.pdf"
+        asset_content_type: application/pdf
